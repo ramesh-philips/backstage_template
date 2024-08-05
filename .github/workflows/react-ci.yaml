@@ -1,0 +1,74 @@
+# yamllint disable-file
+name: react-ci
+on:
+  pull_request:
+   branches: 
+      main
+  push:
+   branches:
+      main
+
+jobs: 
+  dotnet-ci:     
+    name: react-ci
+    uses: philips-internal/saas-factory-workflows/.github/workflows/dotnet_ci.yml@main
+    with:
+      disable_blackduck_sbom_scan: 
+      blackduck_project_name: ""
+      blackduck_version_name: ""
+      disable_codescene_scan: 
+      codescene_project_name: ""
+      codescene_risk_threshold: ""
+      codescene_timeout: ""
+      codescene_coupling_threshold_percent: ""
+      codescene_server_url: ""
+      buildpush_enable_push_to_jfrog_artifactory: 
+      buildpush_enable_push_to_hsp: 
+      buildpush_enable_push_to_ecr: 
+      disable_buildpush_image: 
+      buildpush_image_name: ""
+      buildpush_dockerfile_path: ""
+      buildpush_enable_external_repository_pull: 
+      buildpush_enable_multiple_dockerfile_build: 
+      disable_sonarqube_scan: 
+      sonar_host_url: ""
+      sonar_projectkey: ""
+      disable_sonarqube_scan_with_coverlet_codecoverge: 
+      disable_checkov_scan: 
+      disable_jscpd_scan: 
+      disable_superlinter_scan: 
+      disable_dhf_automation: 
+      dhf_automation_collection_environment_file: ""
+      dhf_automation_documentapi_data_file: ""
+      dhf_automation_reportapi_data_file: ""
+      dhf_automation_mr_auth_username: ""
+      dhf_automation_mr_auth_domain: ""
+      disable_ephemeral_env_test: 
+      epenv_kube_cluster_name: ""
+      epenv_helm_repository_path: ""
+      epenv_helm_chart_version: ""
+      epenv_cluster_namespace: ""
+      epenv_test_file: ""
+      epenv_deployment_app_name: ""
+      disable_fortify_scan: 
+      fortify_projectname: ""
+      fortify_version: ""
+      dotnet_version: ""
+      nugetconfig_filepath: ""
+      slnfile_dir: ""
+      semantic_release_dry_run_mode: 
+      semantic_release_branch: ""
+    secrets:    
+      blackduck_auth_token: ${{ SECRETS.BLACKDUCK_AUTH_TOKEN }}    
+      codescene_user: ${{ SECRETS.CODESCENE_USER }}
+      codescene_password: ${{ SECRETS.CODESCENE_PASSWORD }}    
+      buildpush_docker_build_args: ${{ SECRETS.BUILDPUSH_DOCKER_BUILD_ARGS }}    
+      sonar_auth_token: ${{ SECRETS.SONAR_AUTH_TOKEN }}    
+      dhf_automation_ads_pat: ${{ SECRETS.DHF_AUTOMATION_ADS_PAT }}
+      dhf_automation_mr_auth_pwd: ${{ SECRETS.DHF_AUTOMATION_MR_AUTH_PWD }}    
+      aws_access_key_id: ${{ SECRETS.AWS_ACCESS_KEY_ID }}
+      aws_secret_access_key: ${{ SECRETS.AWS_SECRET_ACCESS_KEY }}    
+      fortify_auth_token: ${{ SECRETS.FORTIFY_AUTH_TOKEN }}
+      nuget_artifactory_token: ${{ SECRETS.NUGET_ARTIFACTORY_TOKEN }}
+      pat_token_github: ${{ SECRETS.PAT_TOKEN_GITHUB }}
+        
