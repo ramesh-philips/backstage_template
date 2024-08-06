@@ -34,7 +34,9 @@ jobs:
             ${{ runner.os }}-node-${{ matrix.node-version }}-
 
       - name: Install dependencies
-        run: npm install
+        run: | 
+          cd social-media-app 
+          npm install
 
       - name: Run tests
         run: npm test
