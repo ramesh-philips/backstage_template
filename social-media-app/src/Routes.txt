@@ -1,0 +1,23 @@
+<nav>
+        <ul>
+          <li><Link to="/">Home</Link></li>
+          <li><Link to="/about">About</Link></li>
+          <li><Link to="/postpage">PostPage</Link></li>
+        </ul>
+      </nav>
+      <Routes>
+        <Route path='/' element={<Home/>}></Route>
+        <Route path='/about' element={<About/>}></Route>
+        <Route path='/newpost' element={<NewPost/>}></Route>
+        {/* <Route path='/postpage' element={<PostPage/>}></Route>
+        <Route path='/postpage/:id' element={<Post/>}></Route>
+        <Route path='/postpage/newpost' element={<NewPost/>}></Route> */}
+        <Route path='/postpage' element={<PostLayout/>}>
+          <Route index element={<PostPage/>}></Route>
+          <Route path=':id' element={<Post/>}></Route>
+          <Route path='newpost' element={<NewPost/>}></Route>
+        </Route>
+        <Route path='*' element={<HandleError/>}></Route>
+      </Routes>
+      <Header/>
+      <Nav/>
