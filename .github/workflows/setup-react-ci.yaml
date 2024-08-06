@@ -39,13 +39,17 @@ jobs:
           npm install
 
       - name: Run tests
-        run: npm test
+        run: | 
+          cd social-media-app
+          npm test
 
       - name: Build project
-        run: npm run build
+        run: | 
+          cd social-media-app
+          npm run build
 
-    #   - name: Upload production build artifacts
-    #     uses: actions/upload-artifact@v2
-    #     with:
-    #       name: build
-    #       path: build/
+      - name: Upload production build artifacts
+        uses: actions/upload-artifact@v4
+        with:
+          name: build
+          path: social-media-app/build/
