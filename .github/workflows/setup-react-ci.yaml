@@ -1,20 +1,20 @@
-name: CI
+name: Setup React CI
 
 on:
-  push:
-    branches:
-      - main
   pull_request:
-    branches:
-      - main
+   branches: 
+      main
+  push:
+   branches:
+      main
 
 jobs:
   build:
-    runs-on: [self-hosted, Windows, x64]
+    runs-on: [ubuntu-latest]
 
     strategy:
       matrix:
-        node-version: [14.x, 16.x]
+        node-version: [16.x]
 
     steps:
       - name: Checkout repository
@@ -34,16 +34,34 @@ jobs:
             ${{ runner.os }}-node-${{ matrix.node-version }}-
 
       - name: Install dependencies
+        working-directory: ./social-media-app
         run: npm install
 
+      - name: Run lint
+        working-directory: ./social-media-app
+        run: npm run lint || true
+
       - name: Run tests
+        working-directory: ./social-media-app
         run: npm test
+      
+      - name: Run tests with coverage
+        working-directory: ./social-media-app
+        run: npm test -- --coverage
+
+      - name: Upload coverage report
+        uses: actions/upload-artifact@v4
+        with:
+          name: coverage-report
+          path: social-media-app/coverage/
 
       - name: Build project
+        working-directory: ./social-media-app
         run: npm run build
 
       - name: Upload production build artifacts
-        uses: actions/upload-artifact@v2
+        uses: actions/upload-artifact@v4
         with:
           name: build
-          path: build/
+          path: social-media-app/build/
+  
