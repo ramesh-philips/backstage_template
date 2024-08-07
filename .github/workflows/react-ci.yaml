@@ -1,0 +1,26 @@
+# yamllint disable-file
+name: react-ci
+on:
+  pull_request:
+   branches: 
+      main
+  push:
+   branches:
+      main
+
+jobs: 
+  dotnet-ci:     
+    name: react-ci
+    uses: philips-internal/saas-factory-workflows/.github/workflows/react_ci.yml@main
+    with:
+      project_name: "test"
+      node_version: "14.x"
+      working_directory: "./"
+      dependencies_command: "npm install"
+      lint_command: npm run lint || true
+      test_command: "npm test"
+      test_coverage_command: "npm test -- --coverage"
+      build_command: "npm run build"
+      deploy_command: "npm run deploy"
+    
+        
