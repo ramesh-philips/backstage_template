@@ -14,7 +14,10 @@ jobs:
 
     steps:
       - name: Checkout repository
-        uses: actions/checkout@v2
+        uses: actions/checkout@v4
+        with:
+          # Disabling shallow clones is recommended for improving the relevancy of reporting
+          fetch-depth: 0
 
       - name: Set up Node.js 16.x
         uses: actions/setup-node@v2
@@ -52,4 +55,14 @@ jobs:
         with:
           name: build
           path: social-media-app/build/
+      
+      - name: SonarQube Scan
+        if: true
+        needs: [build]
+        uses: sonarsource/sonarqube-scan-action@v2.3.0 # Ex: v2.1.0, See the latest version at https://github.com/marketplace/actions/official-sonarqube-scan
+        env:
+          SONAR_TOKEN: 
+          SONAR_HOST_URL: https://sonarqube-pic.ta.philips.com/sonar
+        with:
+          projectBaseDir: social-media-app/src
   
