@@ -14,7 +14,10 @@ jobs:
 
     steps:
       - name: Checkout repository
-        uses: actions/checkout@v2
+        uses: actions/checkout@v4
+        with:
+          # Disabling shallow clones is recommended for improving the relevancy of reporting
+          fetch-depth: 0
 
       - name: Set up Node.js 16.x
         uses: actions/setup-node@v2
@@ -52,4 +55,29 @@ jobs:
         with:
           name: build
           path: social-media-app/build/
-  
+      
+  sonar_scan:
+    runs-on: ubuntu-latest
+    needs: build
+    if: true
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
+      - name: SonarQube Scan
+        uses: sonarsource/sonarqube-scan-action@v2.3.0
+        env:
+          # SONAR_TOKEN: ${{ SECRETS.SONAR_AUTH_TOKEN }}
+          SONAR_TOKEN: '13c474a79364991d2da8e89e9c113429a903ef68'
+          SONAR_HOST_URL: https://sonarqube-pic.ta.philips.com/sonar
+          GITHUB_TOKEN: 
+          SONAR_SCANNER_OPTS: "-Dhttps.proxyHost=185.46.212.97 -Dhttps.proxyPort=9480 -Dhttp.nonProxyHosts=sonarqube-pic.ta.philips.com"
+        with:
+          projectBaseDir: social-media-app/src
+          args: >
+          -Dsonar.projectKey=social-media-app          
+          -Dsonar.qualitygate.wait=true
+          -Dsonar.verbose=true
+          -Dsonar.javascript.lcov.reportPaths=social-media-app/coverage/social-media-app/lcov.info
+          -Dsonar.exclusions=['*.test.js','**/.spec.ts','.spec.ts','**/.test.ts','*.test.ts']
+          -Dsonar.coverage.exclusions=['**/*spec.ts','.spec.ts','*.test.js']
