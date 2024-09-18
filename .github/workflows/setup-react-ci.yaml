@@ -65,13 +65,31 @@ jobs:
           name: build
           path: social-media-app/build/
       
-      - name: Report code build to Faros
+      - name: Set current date as env variable
+        run: echo "NOW=$(date +'%Y-%m-%dT%H:%M:%S')" >> $GITHUB_ENV
+      - name: Echo current date
+        run: echo $NOW # Gives "2022-12-11T01:42:20"
+      
+      - name: Report code ci build to Faros
         id: send-ci-event
         uses: faros-ai/faros-cicd-github-action@v3.0.9
         with:
           api-key: ${{ secrets.FAROS_API_KEY }}
           event: CI
           run-id: ${{github.run_id}}
+          run-status: ${{ job.status }} # possible values - Success, Failed, Canceled
+          run-started-at: $NOW # millis since epoch, ISO-8601 string or 'Now'
+          run-ended-at: $NOW # millis since epoch, ISO-8601 string or 'Now'
+      
+      - name: Report code cd build to Faros
+        id: send-cd-event
+        uses: faros-ai/faros-cicd-github-action@v3.0.9
+        with:
+          api-key: ${{ secrets.FAROS_API_KEY }}
+          event: CD
+          deploy-status: Success # possible values - Success, Failed, Canceled
+          deploy-started-at: $NOW # millis since epoch, ISO-8601 string or 'Now'
+          deploy-ended-at: $NOW # millis since epoch, ISO-8601 string or 'Now'
           run-status: ${{ job.status }} # possible values - Success, Failed, Canceled
           run-started-at: $NOW # millis since epoch, ISO-8601 string or 'Now'
           run-ended-at: $NOW # millis since epoch, ISO-8601 string or 'Now'
