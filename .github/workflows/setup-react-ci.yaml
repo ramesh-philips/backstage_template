@@ -87,7 +87,7 @@ jobs:
         with:
           api-key: ${{ secrets.FAROS_API_KEY }}
           event: CD
-          deploy: CodeDeploy://MyService/Dev/deploymentId 
+          deploy: CodeDeploy://MyService/Prod/deploymentId 
           deploy-status: Success # possible values - Success, Failed, Canceled
           deploy-started-at: $NOW # millis since epoch, ISO-8601 string or 'Now'
           deploy-ended-at: $NOW # millis since epoch, ISO-8601 string or 'Now'
