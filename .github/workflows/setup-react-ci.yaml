@@ -19,6 +19,10 @@ jobs:
     steps:
       - name: Checkout repository
         uses: actions/checkout@v2
+      
+      - name: Get start time
+        id: start-time
+        run: echo "timestamp=$(date +%s%3N)" >> $GITHUB_ENV
 
       - name: Set up Node.js ${{ matrix.node-version }}
         uses: actions/setup-node@v2
@@ -70,6 +74,14 @@ jobs:
       - name: Echo current date
         run: echo $NOW # Gives "2022-12-11T01:42:20"
       
+      - name: Get end time
+        id: end-time
+        run: echo "timestamp=$(date +%s%3N)" >> $GITHUB_ENV
+
+      - name: Get the last four digits of the run ID
+        id: last-four-run-id
+        run: echo "last_four=$(echo $GITHUB_RUN_ID | tail -c 5)" >> $GITHUB_ENV
+      
       - name: Report code ci build to Faros
         id: send-ci-event
         uses: faros-ai/faros-cicd-github-action@v3.0.9
@@ -78,8 +90,11 @@ jobs:
           event: CI
           run-id: ${{github.run_id}}
           run-status: ${{ job.status }} # possible values - Success, Failed, Canceled
-          run-started-at: $NOW # millis since epoch, ISO-8601 string or 'Now'
-          run-ended-at: $NOW # millis since epoch, ISO-8601 string or 'Now'
+          #run-started-at: $NOW # millis since epoch, ISO-8601 string or 'Now'
+          #run-ended-at: $NOW # millis since epoch, ISO-8601 string or 'Now'
+          run-started-at: ${{ steps.start-time.outputs.timestamp }}
+          run-ended-at: ${{ steps.end-time.outputs.timestamp }}
+          pipeline-id: ${{ github.run_id }}
       
       - name: Report code cd build to Faros
         id: send-cd-event
@@ -87,11 +102,14 @@ jobs:
         with:
           api-key: ${{ secrets.FAROS_API_KEY }}
           event: CD
-          deploy: CodeDeploy://MyService/Prod/00123 
+          deploy: CodeDeploy://MyService/Prod/${{ steps.last-four-run-id.outputs.last_four }}
+          run-id: ${{github.run_id}}
+          pull-request-number: ${{ github.event.pull_request.number }}
           deploy-status: Success # possible values - Success, Failed, Canceled
           deploy-started-at: $NOW # millis since epoch, ISO-8601 string or 'Now'
           deploy-ended-at: $NOW # millis since epoch, ISO-8601 string or 'Now'
           run-status: ${{ job.status }} # possible values - Success, Failed, Canceled
-          run-started-at: $NOW # millis since epoch, ISO-8601 string or 'Now'
-          run-ended-at: $NOW # millis since epoch, ISO-8601 string or 'Now'
+          run-started-at: ${{ steps.start-time.outputs.timestamp }}
+          run-ended-at: ${{ steps.end-time.outputs.timestamp }}
+          pipeline-id: ${{ github.run_id }}
   
