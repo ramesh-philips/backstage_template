@@ -80,7 +80,9 @@ jobs:
 
       - name: Get the last four digits of the run ID
         id: last-four-run-id
-        run: echo "last_four=$(echo $GITHUB_RUN_ID | tail -c 5)" >> $GITHUB_ENV
+        run: |
+          echo "last_four=$(echo $GITHUB_RUN_ID | tail -c 5)" >> $GITHUB_ENV
+          echo last_fou_digitr=$(echo $GITHUB_RUN_ID | tail -c 5)
       
       - name: Report code ci build to Faros
         id: send-ci-event
@@ -92,8 +94,8 @@ jobs:
           run-status: ${{ job.status }} # possible values - Success, Failed, Canceled
           #run-started-at: $NOW # millis since epoch, ISO-8601 string or 'Now'
           #run-ended-at: $NOW # millis since epoch, ISO-8601 string or 'Now'
-          run-started-at: ${{ steps.start-time.outputs.timestamp }}
-          run-ended-at: ${{ steps.end-time.outputs.timestamp }}
+          run-started-at: ${{ env.timestamp }}
+          run-ended-at: ${{ env.timestamp }}
           pipeline-id: ${{ github.run_id }}
       
       - name: Report code cd build to Faros
@@ -102,14 +104,14 @@ jobs:
         with:
           api-key: ${{ secrets.FAROS_API_KEY }}
           event: CD
-          deploy: CodeDeploy://MyService/Prod/${{ steps.last-four-run-id.outputs.last_four }}
+          deploy: CodeDeploy://MyService/Prod/${{ env.last_four }}
           run-id: ${{github.run_id}}
           pull-request-number: ${{ github.event.pull_request.number }}
           deploy-status: Success # possible values - Success, Failed, Canceled
           deploy-started-at: $NOW # millis since epoch, ISO-8601 string or 'Now'
           deploy-ended-at: $NOW # millis since epoch, ISO-8601 string or 'Now'
           run-status: ${{ job.status }} # possible values - Success, Failed, Canceled
-          run-started-at: ${{ steps.start-time.outputs.timestamp }}
-          run-ended-at: ${{ steps.end-time.outputs.timestamp }}
+          run-started-at: ${{ env.timestamp }}
+          run-ended-at: ${{ env.timestamp }}
           pipeline-id: ${{ github.run_id }}
   
