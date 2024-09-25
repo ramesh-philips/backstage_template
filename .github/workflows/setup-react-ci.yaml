@@ -18,7 +18,7 @@ jobs:
 
     steps:
       - name: Checkout repository
-        uses: actions/checkout@v2
+        uses: actions/checkout@v1
       
       - name: Get start time
         id: start-time
@@ -27,7 +27,7 @@ jobs:
           echo starttimestamp=$(date +%s%3N)
 
       - name: Set up Node.js ${{ matrix.node-version }}
-        uses: actions/setup-node@v2
+        uses: actions/setup-node@v3
         with:
           node-version: ${{ matrix.node-version }}
 
@@ -111,7 +111,7 @@ jobs:
           deploy: CodeDeploy://MyService/Prod/${{ env.last_four }}
           run-id: ${{github.run_id}}
           pull-request-number: ${{ github.event.pull_request.number }}
-          deploy-status: Failed # possible values - Success, Failed, Canceled
+          deploy-status: Success # possible values - Success, Failed, Canceled
           deploy-started-at: ${{ steps.start-time.outputs.starttimestamp }} # millis since epoch, ISO-8601 string or 'Now'
           deploy-ended-at: ${{ steps.end-time.outputs.endtimestamp }} # millis since epoch, ISO-8601 string or 'Now'
           run-status: ${{ job.status }} # possible values - Success, Failed, Canceled
