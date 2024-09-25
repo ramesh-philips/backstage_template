@@ -19,7 +19,8 @@
     "build": "CI=false react-scripts build",
     "test": "react-scripts test --passWithNoTests",
     "eject": "react-scripts eject",
-    "lint": "eslint src/**/*.{js,jsx,ts,tsx}"
+    "lint": "eslint src/**/*.{js,jsx,ts,tsx}",
+    "prettier": "prettier --write ."
   },
   "browserslist": {
     "production": [
@@ -41,6 +42,7 @@
     "eslint-config-react-app": "^7.0.1",
     "eslint-plugin-react": "^7.35.0",
     "globals": "^15.9.0",
+    "prettier": "3.3.3",
     "react-scripts": "^5.0.1"
   },
   "jest": {

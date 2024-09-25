@@ -96,8 +96,8 @@ jobs:
           event: CI
           run-id: ${{github.run_id}}
           run-status: ${{ job.status }} # possible values - Success, Failed, Canceled
-          #run-started-at: $NOW # millis since epoch, ISO-8601 string or 'Now'
-          #run-ended-at: $NOW # millis since epoch, ISO-8601 string or 'Now'
+          ##run-started-at: $NOW # millis since epoch, ISO-8601 string or 'Now'
+          ##run-ended-at: $NOW # millis since epoch, ISO-8601 string or 'Now'
           run-started-at: ${{ steps.start-time.outputs.starttimestamp }}
           run-ended-at: ${{ steps.end-time.outputs.endtimestamp }}
           pipeline-id: ${{ github.run_id }}
