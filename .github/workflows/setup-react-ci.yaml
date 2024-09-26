@@ -111,7 +111,7 @@ jobs:
           deploy: CodeDeploy://MyService/Prod/${{ env.last_four }}
           run-id: ${{github.run_id}}
           pull-request-number: ${{ github.event.pull_request.number }}
-          deploy-status: Success # possible values - Success, Failed, Canceled
+          deploy-status: Canceled # possible values - Success, Failed, Canceled
           deploy-started-at: ${{ steps.start-time.outputs.starttimestamp }} # millis since epoch, ISO-8601 string or 'Now'
           deploy-ended-at: ${{ steps.end-time.outputs.endtimestamp }} # millis since epoch, ISO-8601 string or 'Now'
           run-status: ${{ job.status }} # possible values - Success, Failed, Canceled
