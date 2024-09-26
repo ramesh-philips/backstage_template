@@ -108,7 +108,7 @@ jobs:
         with:
           api-key: ${{ secrets.FAROS_API_KEY }}
           event: CD
-          deploy: CodeDeploy://MyService/Dev/${{ env.last_four }}
+          deploy: CodeDeploy://MyTestService/Prod/${{ env.last_four }}
           run-id: ${{github.run_id}}
           pull-request-number: ${{ github.event.pull_request.number }}
           deploy-status: Success # possible values - Success, Failed, Canceled
