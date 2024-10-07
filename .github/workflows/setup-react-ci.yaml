@@ -18,10 +18,16 @@ jobs:
 
     steps:
       - name: Checkout repository
-        uses: actions/checkout@v2
+        uses: actions/checkout@v1
+      
+      - name: Get start time
+        id: start-time
+        run: |
+          echo "starttimestamp=$(date +%s%3N)" >> $GITHUB_ENV
+          echo starttimestamp=$(date +%s%3N)
 
       - name: Set up Node.js ${{ matrix.node-version }}
-        uses: actions/setup-node@v2
+        uses: actions/setup-node@v3
         with:
           node-version: ${{ matrix.node-version }}
 
@@ -64,4 +70,52 @@ jobs:
         with:
           name: build
           path: social-media-app/build/
+      
+      - name: Set current date as env variable
+        run: echo "NOW=$(date +'%Y-%m-%dT%H:%M:%S')" >> $GITHUB_ENV
+      - name: Echo current date
+        run: echo $NOW # Gives "2022-12-11T01:42:20"
+      
+      - name: Get end time
+        id: end-time
+        run: |
+          echo "endtimestamp=$(date +%s%3N)" >> $GITHUB_ENV
+          echo endtimestamp=$(date +%s%3N)
+
+      - name: Get the last four digits of the run ID
+        id: last-four-run-id
+        run: |
+          echo "last_four=$(echo $GITHUB_RUN_ID | tail -c 5)" >> $GITHUB_ENV
+          echo last_four_digit=$(echo $GITHUB_RUN_ID | tail -c 5)
+      
+      - name: Report code ci build to Faros
+        id: send-ci-event
+        uses: faros-ai/faros-cicd-github-action@v3.0.9
+        with:
+          api-key: ${{ secrets.FAROS_API_KEY }}
+          event: CI
+          run-id: ${{github.run_id}}
+          run-status: ${{ job.status }} # possible values - Success, Failed, Canceled
+          ##run-started-at: $NOW # millis since epoch, ISO-8601 string or 'Now'
+          ##run-ended-at: $NOW # millis since epoch, ISO-8601 string or 'Now'
+          run-started-at: ${{ steps.start-time.outputs.starttimestamp }}
+          run-ended-at: ${{ steps.end-time.outputs.endtimestamp }}
+          pipeline-id: ${{ github.run_id }}
+      
+      - name: Report code cd build to Faros
+        id: send-cd-event
+        uses: faros-ai/faros-cicd-github-action@v3.0.9
+        with:
+          api-key: ${{ secrets.FAROS_API_KEY }}
+          event: CD
+          deploy: CodeDeploy://MyTestService_2/Prod/${{ env.last_four }}
+          run-id: ${{github.run_id}}
+          pull-request-number: ${{ github.event.pull_request.number }}
+          deploy-status: Success # possible values - Success, Failed, Canceled
+          deploy-started-at: ${{ steps.start-time.outputs.starttimestamp }} # millis since epoch, ISO-8601 string or 'Now'
+          deploy-ended-at: ${{ steps.end-time.outputs.endtimestamp }} # millis since epoch, ISO-8601 string or 'Now'
+          run-status: ${{ job.status }} # possible values - Success, Failed, Canceled
+          run-started-at: ${{ steps.start-time.outputs.starttimestamp }}
+          run-ended-at: ${{ steps.end-time.outputs.endtimestamp }}
+          pipeline-id: ${{ github.run_id }}
   
