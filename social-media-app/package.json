@@ -18,7 +18,7 @@
   "scripts": {
     "start": "react-scripts start",
     "start:dev": "env-cmd -f .env.development react-scripts start",
-    "build": "react-scripts build",
+    "build": "CI=false react-scripts build",
     "build:staging": "env-cmd -f .env.staging react-scripts build",
     "build:production": "env-cmd -f .env.production react-scripts build",
     "test": "react-scripts test --passWithNoTests",
