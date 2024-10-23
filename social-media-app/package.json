@@ -8,6 +8,7 @@
     "@testing-library/user-event": "^13.5.0",
     "axios": "^1.6.2",
     "date-fns": "^2.30.0",
+    "env-cmd": "^10.1.0",
     "react": "^18.2.0",
     "react-dom": "^18.2.0",
     "react-icons": "^4.12.0",
@@ -16,10 +17,14 @@
   },
   "scripts": {
     "start": "react-scripts start",
+    "start:dev": "env-cmd -f .env.development react-scripts start",
     "build": "CI=false react-scripts build",
+    "build:staging": "env-cmd -f .env.staging react-scripts build",
+    "build:production": "env-cmd -f .env.production react-scripts build",
     "test": "react-scripts test --passWithNoTests",
     "eject": "react-scripts eject",
-    "lint": "eslint src/**/*.{js,jsx,ts,tsx}"
+    "lint": "eslint src/**/*.{js,jsx,ts,tsx}",
+    "prettier": "prettier --write ."
   },
   "browserslist": {
     "production": [
@@ -41,6 +46,7 @@
     "eslint-config-react-app": "^7.0.1",
     "eslint-plugin-react": "^7.35.0",
     "globals": "^15.9.0",
+    "prettier": "3.3.3",
     "react-scripts": "^5.0.1"
   },
   "jest": {
